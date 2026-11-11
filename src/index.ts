@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import userRouter from "./routes/userRoute";
 import postRouter from "./routes/postRoute";
-
+import authRouter from "./routes/auth.routes";
 dotenv.config();
 
 const app: Application = express();
@@ -12,6 +12,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+app.use("/api", authRouter);
 app.use("/api", userRouter);
 app.use("/api", postRouter);
 
