@@ -54,3 +54,35 @@ export async function getUserWhitPost(req: Request, res: Response) {
       .json({ error: "erro al crear usuarios", message: error.message });
   }
 }
+
+export async function searchUsers(req: Request, res: Response) {
+  const { name, email } = req.query;
+  try {
+    const users = await prisma.user.findMany({
+      where: {
+        // en caso de q manden el nombre buscara las coincidencias parciales mar
+        name: name
+          ? {
+              contains: String(name),
+              mode: "insensitive", // ignorar minusculas y mayusculas
+            }
+          : undefined,
+        email: email
+          ? {
+              contains: String(email),
+              mode: "insensitive",
+            }
+          : undefined,
+      },
+      orderBy: { id: "asc" },
+    });
+    res.status(200).json({
+      data: users,
+    });
+  } catch (error: any) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "erro al buscar usuarios", message: error.message });
+  }
+}
