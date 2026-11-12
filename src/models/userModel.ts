@@ -38,7 +38,7 @@ export const UserModel = {
     name: string;
     email: string;
     password: string;
-    role: Role;
+    role?: Role;
   }) {
     return await prisma.user.create({
       data: data,

@@ -16,6 +16,27 @@ export async function getUsers(req: Request, res: Response) {
 }
 
 export async function createUser(req: Request, res: Response) {
+  const { name, email, password } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  try {
+    const newUser = await UserModel.create({
+      email,
+      password: hashedPassword,
+      name,
+    });
+    res.status(201).json({
+      data: newUser,
+    });
+  } catch (error: any) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "erro al crear usuarios", message: error.message });
+  }
+}
+
+export async function createUser2(req: Request, res: Response) {
   const { name, email, password, role } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
 
